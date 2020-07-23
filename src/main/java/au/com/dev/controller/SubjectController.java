@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import au.com.dev.dto.Subject;
 
-//@CrossOrigin(origins = "*")
-//@RestController
-//@RequestMapping({ "/subjects" })
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping({ "/subjects" })
 public class SubjectController {
 	
 	private final SubjectRepository subjectRepository;
@@ -26,6 +27,7 @@ public class SubjectController {
 	}
 	
 	@GetMapping(produces = "application/json")
+	@RequestMapping(value = "/subjects", method = RequestMethod.GET) 
 	public List<Subject> getSubjects() throws Exception {
 		try {
 			return (List<Subject>) subjectRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));

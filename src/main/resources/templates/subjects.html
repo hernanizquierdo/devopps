@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>DevOpps - Assessment_2</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+.myTable {
+	background-color: #eee;
+	border-collapse: collapse;
+	border: 1px solid black;
+	width: 100%;
+}
+
+.myTable th {
+	background-color: #000;
+	color: white;
+	width: 50%;
+}
+
+.myTable td, .myTable th {
+	padding: 15px;
+	text-align: left;
+	border: 1px solid black;
+}
+
+.headerTable {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.logout{
+width: 100%;
+text-align: right;
+}
+</style>
+</head>
+<body>
+	<div class="logout"><a href="/" title="Logout">Logout</a></div>
+	<p th:text="${name}" />
+	<p>Connected to Database cloud service *AWS RDS*</p>
+	<br>	
+	<table class="myTable">
+		<tr class="headerTable">
+			<td th:text="NAME" />
+			<td th:text="REQUIRED" />
+			<td th:text="CREDITS" />
+			<td th:text="PREREQ" />
+			<td th:text="DESCRIPTION" />
+		</tr>
+		<tr th:each="subject: ${subjects}">
+			<td th:text="${subject.name}" />
+			<td th:text="${subject.required}" />
+			<td th:text="${subject.credits}" />
+			<td th:text="${subject.prereq}" />
+			<td th:text="${subject.description}" />
+		</tr>
+	</table>
+
+</body>
+</html>

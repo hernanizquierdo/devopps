@@ -29,15 +29,15 @@ public class SubjectController {
 		this.subjectRepository = subjectRepository;
 	}
 	
-//	@GetMapping(produces = "application/json")
-//	@RequestMapping(value = "/subjects", method = RequestMethod.GET) 
-//	public List<Subject> getSubjects() throws Exception {
-//		try {
-//			return (List<Subject>) subjectRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-//		} catch (Exception ex) {
-//			throw new Exception("Subject.", ex);
-//		}
-//	}
+	@GetMapping(produces = "application/json")
+	@RequestMapping(value = "/subjects", method = RequestMethod.GET) 
+	public List<Subject> getSubjects() throws Exception {
+		try {
+			return (List<Subject>) subjectRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+		} catch (Exception ex) {
+			throw new Exception("Subject.", ex);
+		}
+	}
 
 	@PostMapping
 	void addSibject( @RequestBody Subject subject) throws Exception {

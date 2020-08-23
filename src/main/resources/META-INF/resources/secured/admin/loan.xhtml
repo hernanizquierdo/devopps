@@ -1,0 +1,322 @@
+<ui:composition template="/secured/template/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:define name="title">
+        #{msg.loan_title}
+    </ui:define>
+
+	<ui:define name="content">
+		<div class="card">
+
+
+
+			<div class="subtitle_page">
+				<h3>#{msg.loan_subtitle}</h3>
+			</div>
+			<div class="card-content">
+
+				<p:commandButton value="#{msg.button_search}" icon="pi pi-search"
+					update=":growl :customerDetail" process="@this"
+					oncomplete="PF('findCustomerDialog').show()">
+				</p:commandButton>
+
+
+				<p:dialog header="#{msg.customer_subtitle}" id="findCustomerDialog"
+					widgetVar="findCustomerDialog" modal="true" showEffect="fade"
+					hideEffect="fade" resizable="false" draggable="false" width="70%">
+
+
+					<h:form id="formPanel" styleClass="formPanel">
+						<div class="ui-fluid p-formgrid p-grid">
+							<div class="p-field p-col-12 p-md-8">
+								<p:outputLabel for="searchCustomerId" value="#{msg.customer_id}" />
+								<p:inputText id="searchCustomerId"
+									value="#{loanBean.customerSearch.customerId}"
+									onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+									required="true" label="#{msg.customer_id}">
+									<f:validateLength minimum="3" maximum="15" />
+								</p:inputText>
+								<p:message for="searchCustomerId" display="tooltip" />
+							</div>
+							<div class="p-field p-col-12 p-md-4">
+								<p:outputLabel for="search" />
+								<p:commandButton id="search" value="#{msg.button_search}"
+									update=":growl formPanel tbl" action="#{loanBean.findCustomer}" />
+							</div>
+						</div>
+					</h:form>
+
+
+
+
+
+					<p:dataTable id="tbl" var="customer" value="#{loanBean.customers}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+						paginator="true" rows="10" style="margin-bottom:20px">
+
+						<p:column visible="false">
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{customer.id}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.customer_id}" />
+							</f:facet>
+							<h:outputText value="#{customer.customerId}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.lastName}" />
+							</f:facet>
+							<h:outputText value="#{customer.lastName}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.name}" />
+							</f:facet>
+							<h:outputText value="#{customer.name}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.phone}" />
+							</f:facet>
+							<h:outputText value="#{customer.phone}" />
+						</p:column>
+						<!--  -->
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.actions}" />
+							</f:facet>
+
+							<p:commandLink update=":customerDetail :dataTableButtonGroup"
+								oncomplete="PF('findCustomerDialog').hide()"
+								action="#{loanBean.allowCreateNewLoan}"
+								title="#{msg.button_loan}">
+								<h:outputText styleClass="pi pi-search" style="margin:0 auto;"
+									value="#{msg.button_loan}" />
+								<f:setPropertyActionListener value="#{customer}"
+									target="#{loanBean.customer}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+					<p:blockUI block="tbl" trigger="tbl">
+        					LOADING<br />
+						<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+					</p:blockUI>
+
+				</p:dialog>
+
+				<br />
+				<p:separator />
+				<br />
+				<!-- 
+				<p:dialog header="#{msg.customer_subtitle}" id="customerDialog"
+					widgetVar="customerDialog" modal="true" showEffect="fade"
+					hideEffect="fade" resizable="false" draggable="false" width="70%">
+					 -->
+				<p:outputPanel id="customerDetail">
+					<h:form id="formPanelCustomer">
+						<div class="ui-fluid p-formgrid p-grid">
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.customer_id}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.customerId}" />
+								</h4>
+							</div>
+
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.name}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.name}" />
+								</h4>
+							</div>
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.lastName}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.lastName}" />
+								</h4>
+							</div>
+
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.cRange}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.cRange}" />
+								</h4>
+							</div>
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.rating}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.rating}" />
+								</h4>
+							</div>
+
+
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.squad}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.squad}" />
+								</h4>
+							</div>
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.army}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.army}" />
+								</h4>
+							</div>
+							<!-- 
+							<div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.timeInSquad}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.customer.timeInSquad}">
+										<f:convertDateTime pattern="dd-MM-yyyy" />
+									</p:outputLabel>
+								</h4>
+							</div>
+							 -->
+							 <div class="p-field p-col-6 p-md-3">
+								<p:outputLabel value="#{msg.timeInSquad_years}" />
+								<br />
+								<h4>
+									<p:outputLabel value="#{loanBean.years}">
+									</p:outputLabel>
+								</h4>
+							</div>
+						</div>
+
+
+						<p:separator />
+						<h4>#{msg.loan_subtitle_list}</h4>
+
+
+						<p:dataTable id="tblLoan" var="loan"
+							value="#{loanBean.customer.loans}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+							paginator="true" rows="10" style="margin-bottom:20px">
+
+							<p:column visible="false">
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{loan.id}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.concept}" />
+								</f:facet>
+								<h:outputText value="#{loan.concept}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.capital}" />
+								</f:facet>
+								<h:outputText value="#{loan.capital}">
+									<f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.loan_balance_total}" />
+								</f:facet>
+								<h:outputText value="#{loan.totalBalance}">
+									<f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2" />
+								</h:outputText>
+							</p:column>
+							
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.loan_date}" />
+								</f:facet>
+								<h:outputText value="#{loan.loanDate}">
+									<f:convertDateTime pattern="yyyy-MM-dd" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.status}" />
+								</f:facet>
+								<h:outputText value="#{loan.status}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{msg.actions}" />
+								</f:facet>
+								<p:commandButton value="#{msg.button_detail}" icon="pi pi-home"
+									action="#{loanBean.details()}">
+									<f:setPropertyActionListener value="#{loan}"
+										target="#{loanBean.loan}" />
+								</p:commandButton>
+								<!-- 
+						<p:commandButton value="#{msg.button_detail}" icon="pi pi-home"
+							 action="#{loanBean.details()}"
+							 process="@this"
+								oncomplete="PF('customerDialog').hide()">
+								<f:setPropertyActionListener value="#{loan}"
+									target="#{loanBean.loan}" />
+								</p:commandButton>
+								-->
+
+							</p:column>
+
+						</p:dataTable>
+						<p:blockUI block="tblLoan" trigger="tblLoan">
+        					LOADING<br />
+							<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+						</p:blockUI>
+						<p:commandButton value="#{msg.button_new_loan}" icon="pi pi-home"
+							id="btnNewLoan" action="#{loanBean.newLoan()}"
+							disabled="#{loanBean.disableCreateLoan}">
+						</p:commandButton>
+						<h:outputText value="#{msg.no_allowed_to_lend}"
+							rendered="#{loanBean.allowedToLend}" />
+
+					</h:form>
+
+
+					<br />
+
+
+					<p:outputPanel id="dataTableButtonGroup">
+
+
+					</p:outputPanel>
+
+
+
+
+
+
+
+
+				</p:outputPanel>
+
+				<!-- 
+				</p:dialog>
+				 -->
+
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

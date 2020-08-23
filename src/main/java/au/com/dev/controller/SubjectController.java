@@ -1,8 +1,10 @@
 package au.com.dev.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import au.com.dev.dto.Subject;
+import au.com.dev.sdm.dto.Resource;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,15 +29,15 @@ public class SubjectController {
 		this.subjectRepository = subjectRepository;
 	}
 	
-	@GetMapping(produces = "application/json")
-	@RequestMapping(value = "/subjects", method = RequestMethod.GET) 
-	public List<Subject> getSubjects() throws Exception {
-		try {
-			return (List<Subject>) subjectRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
-		} catch (Exception ex) {
-			throw new Exception("Subject.", ex);
-		}
-	}
+//	@GetMapping(produces = "application/json")
+//	@RequestMapping(value = "/subjects", method = RequestMethod.GET) 
+//	public List<Subject> getSubjects() throws Exception {
+//		try {
+//			return (List<Subject>) subjectRepository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+//		} catch (Exception ex) {
+//			throw new Exception("Subject.", ex);
+//		}
+//	}
 
 	@PostMapping
 	void addSibject( @RequestBody Subject subject) throws Exception {
@@ -58,4 +61,26 @@ public class SubjectController {
 			return false;
 		}
 	}
+	
+//	@GetMapping(produces = "application/json")
+//	@RequestMapping(value = "/quote", method = RequestMethod.GET) 
+//	public String getResources(Model model) throws Exception {
+//		try {
+//			model.addAttribute("resources", getAllResources());
+//			return "quote";
+//		} catch (Exception ex) {
+//			throw new Exception("Resources.", ex);
+//		}
+//	}
+//	
+//	public static List<Resource> getAllResources(){
+//		List<Resource> resources = new ArrayList<Resource>();
+//		for (int i =0 ; i < 30; i++) {
+//			Resource r = new Resource();
+//			r.setName("Resource_" + i);
+//			r.setPrice(Double.valueOf(10 * i));
+//			resources.add(r);
+//		}
+//		return resources;
+//	}
 }

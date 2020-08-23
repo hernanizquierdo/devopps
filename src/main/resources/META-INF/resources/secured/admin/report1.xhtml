@@ -1,0 +1,109 @@
+<ui:composition template="/secured/template/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:define name="title">
+        #{msg.report_title}
+    </ui:define>
+
+	<!--ui:define name="subtitle">
+			Informacion de usuario
+		</ui:define-->
+	<ui:define name="content">
+		<!-- span class="ui-float-label"> <p:inputText id="float-input"
+				value="#{basicView.text}" /> <p:outputLabel for="@previous"
+				value="Username" />
+		</span-->
+		<div class="card">
+			<div class="subtitle_page">
+				<h3>#{msg.report_subtitle1}</h3>
+			</div>
+			<div class="card-content">
+
+
+				<p:toolbar>
+					<f:facet name="left">
+					</f:facet>
+
+					<f:facet name="right">
+						<a href="/alluserreportExcel" target="_blank">
+							#{msg.export_consolidate_loans_report}</a>
+					</f:facet>
+				</p:toolbar>
+				<h:form id="form">
+					<p:dataTable id="tbl" var="cl"
+						value="#{reportBean.consolidateLoans}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+						paginator="true" rows="20" style="margin-bottom:20px">
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.customer_id}" />
+							</f:facet>
+							<h:outputText value="#{cl.customerIdentification}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.name}" />
+							</f:facet>
+							<h:outputText value="#{cl.lastName} #{cl.name}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.email}" />
+							</f:facet>
+							<h:outputText value="#{cl.email}" />
+						</p:column>
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.concept}" />
+							</f:facet>
+							<h:outputText value="#{cl.concept}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.capital}" />
+							</f:facet>
+							<h:outputText value="#{cl.capital}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.loan_balance_total}" />
+							</f:facet>
+							<h:outputText value="#{cl.totalBalance}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.loan_balance}" />
+							</f:facet>
+							<h:outputText value="#{cl.balance}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.status}" />
+							</f:facet>
+							<h:outputText value="#{cl.status}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.loan_interes}" />
+							</f:facet>
+							<h:outputText value="#{cl.interestToday}" />
+						</p:column>
+					</p:dataTable>
+					<p:blockUI block="tbl" trigger="tbl">
+        					LOADING<br />
+						<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+					</p:blockUI>
+				</h:form>
+			</div>
+
+		</div>
+	</ui:define>
+</ui:composition>

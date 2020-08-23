@@ -1,0 +1,465 @@
+<ui:composition template="/secured/template/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:define name="title">
+        #{msg.loan_detail_title}
+    </ui:define>
+
+	<ui:define name="content">
+		<div class="card">
+			<div class="subtitle_page">
+				<h3>#{msg.loan_detail_subtitle}</h3>
+			</div>
+			<div class="card-content">
+				<h4>#{msg.customer_detail}</h4>
+				<h:form id="formPanelCustomerDetail">
+					<div class="ui-fluid p-formgrid p-grid">
+
+						<!-- Customer detail -->
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel value="#{msg.customer_id}" />
+							<br />
+							<h4>
+								<p:outputLabel value="#{loanBean.customerSearch.customerId}" />
+							</h4>
+						</div>
+
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel value="#{msg.name}" />
+							<br />
+							<h4>
+								<p:outputLabel value="#{loanBean.customer.name}" />
+							</h4>
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel value="#{msg.lastName}" />
+							<br />
+							<h4>
+								<p:outputLabel value="#{loanBean.customer.lastName}" />
+							</h4>
+						</div>
+
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel value="#{msg.rating}" />
+							<br />
+							<h4>
+								<p:outputLabel value="#{loanBean.customer.rating}" />
+							</h4>
+						</div>
+
+					</div>
+				</h:form>
+
+				<p:separator />
+				<h4>#{msg.load_detail}</h4>
+				<!-- Loan Detail -->
+				<h:form id="formPanelLoanDetail">
+					<div class="ui-fluid p-formgrid p-grid">
+
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="capital" value="#{msg.capital}" />
+							<!-- 
+							<p:inputText id="capital" value="#{loanBean.loan.capital}"
+								onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+								disabled="#{loanBean.showPaymentSection}" required="true">
+								<f:validateLength minimum="3" maximum="20" />
+								<f:convertNumber type="currency" currencySymbol="$"
+									maxFractionDigits="2" />
+							</p:inputText>
+							 -->
+							<p:inputNumber id="capital" value="#{loanBean.loan.capital}"
+								symbol="$" disabled="#{loanBean.showPaymentSection}"
+								required="true" symbolPosition="p" emptyValue="always">
+								<p:ajax update="capital" />
+							</p:inputNumber>
+							<p:message for="capital" display="tooltip" />
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="loanDate" value="#{msg.loan_date}" />
+							<p:datePicker id="loanDate" value="#{loanBean.loan.loanDate}"
+								disabled="#{loanBean.showPaymentSection}" required="true" />
+							<p:message for="loanDate" display="tooltip" />
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="interes" value="#{msg.loan_interes}" />
+							<p:inputText id="interes" value="#{loanBean.loan.interest}"
+								onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+								disabled="#{loanBean.showPaymentSection}" required="true">
+								<f:validateLength minimum="1" maximum="2" />
+							</p:inputText>
+							<p:message for="interes" display="tooltip" />
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="comissionInterest"
+								value="#{msg.loan_comissionInt}" />
+							<p:inputText id="comissionInterest"
+								value="#{loanBean.loan.comissionInterest}"
+								disabled="#{loanBean.showPaymentSection}"
+								onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+								required="true">
+								<f:validateLength minimum="1" maximum="2" />
+							</p:inputText>
+							<p:message for="comissionInterest" display="tooltip" />
+						</div>
+
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="guarantor" value="#{msg.guarantor}" />
+							<p:inputText id="guarantor"
+								value="#{loanBean.loan.guarantor.name}" required="true"
+								disabled="true">
+							</p:inputText>
+							<p:message for="guarantor" display="tooltip" />
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="btn_search" />
+							<p:commandButton value="#{msg.button_search_guarantor}"
+								icon="pi pi-search"
+								rendered="#{not loanBean.showPaymentSection}"
+								update=":formPanelLoanDetail" id="btn_search"
+								oncomplete="PF('findGuarantorDialog').show()">
+							</p:commandButton>
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="agent" value="#{msg.agent}" />
+							<p:selectOneMenu id="agent" required="true"
+								disabled="#{loanBean.showPaymentSection}"
+								value="#{loanBean.loan.agent.id}">
+								<f:selectItem itemLabel="#{msg.list_select}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{loanBean.agentsItems}" />
+							</p:selectOneMenu>
+							<p:message for="agent" display="tooltip" />
+						</div>
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="status" value="#{msg.loan_status}" />
+							<p:selectOneMenu id="status" value="#{loanBean.loan.status}"
+								disabled="true">
+								<f:selectItem itemLabel="#{msg.list_select}"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="#{msg.loan_status_close}"
+									itemValue="#{msg.loan_status_close}" />
+								<f:selectItem itemLabel="#{msg.loan_status_open}"
+									itemValue="#{msg.loan_status_open}" />
+								<f:selectItem itemLabel="#{msg.loan_status_legal}"
+									itemValue="#{msg.loan_status_legal}" />
+							</p:selectOneMenu>
+							<p:message for="status" display="tooltip" />
+						</div>
+						
+						<div class="p-field p-col-6 p-md-3">
+							<p:outputLabel for="concept" value="#{msg.concept}" />
+							<p:inputText id="concept" value="#{loanBean.loan.concept}"
+								disabled="#{loanBean.showPaymentSection}" required="true"
+								label="#{msg.concept}" />
+							<p:message for="concept" display="tooltip" />
+						</div>
+
+					</div>
+
+					<p:commandButton value="#{msg.button_save}" icon="pi pi-home"
+						update=":growl formPanelLoanDetail" id="btnCreateLoan"
+						disabled="#{loanBean.allowedToLend}"
+						action="#{loanBean.saveLoan()}">
+					</p:commandButton>
+
+				</h:form>
+
+				<p:outputPanel id="paymentListGroup"
+					rendered="#{loanBean.showPaymentSection}">
+					<p:separator />
+					<h4>#{msg.payment_list}</h4>
+					<!-- Loan Detail -->
+					<h:form id="formPanelPaymentsDetail">
+
+
+
+
+
+						<p:toolbar>
+							<f:facet name="left">
+								<p:commandButton value="#{msg.button_payments_add}"
+									disabled="#{loanBean.allowAddMorePayments}" icon="pi pi-home"
+									oncomplete="PF('paymentDialog').show()">
+									<p:ajax update="formPanelPayment" resetValues="true" />
+								</p:commandButton>
+							</f:facet>
+
+							<f:facet name="right">
+								<div class="p-formgrid p-grid" id="generalSummary">
+									<div class="p-field">
+										<p:outputLabel value="#{msg.loan_balance}" />
+										<p:outputLabel value="#{loanBean.loan.totalBalance}"
+											styleClass="loan-detail">
+											<f:convertNumber type="currency" currencySymbol="$"
+												maxFractionDigits="2" />
+										</p:outputLabel>
+									</div>
+									<div class="p-field">
+										<p:outputLabel for="balance_capital"
+											value="#{msg.balance_capital}" />
+										<p:inputText id="balance_capital"
+											value="#{loanBean.loan.balance}" styleClass="loan-detail-1"
+											disabled="true">
+											<f:convertNumber type="currency" currencySymbol="$"
+												maxFractionDigits="2" />
+										</p:inputText>
+										<p:message for="balance_capital" display="tooltip" />
+									</div>
+									<div class="p-field loan-detail">
+										<p:outputLabel for="calculateInterest"
+											value="#{msg.loan_interes}" />
+										<p:inputText id="calculateInterest" styleClass="loan-detail-1"
+											value="#{loanBean.loan.interestToday}" disabled="true">
+											<f:convertNumber type="currency" currencySymbol="$"
+												maxFractionDigits="2" />
+										</p:inputText>
+										<p:message for="calculateInterest" display="tooltip" />
+									</div>
+								</div>
+							</f:facet>
+						</p:toolbar>
+
+
+
+
+						<div class="ui-fluid p-formgrid p-grid">
+
+							<p:dataTable id="tblPayments" var="payment"
+								value="#{loanBean.payments}"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+								paginator="true" rows="10" style="margin-bottom:20px">
+
+								<p:column visible="false">
+									<f:facet name="header">
+										<h:outputText value="Id" />
+									</f:facet>
+									<h:outputText value="#{payment.id}" />
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.payment_date}" />
+									</f:facet>
+									<h:outputText value="#{payment.date}">
+										<f:convertDateTime pattern="yyyy-MM-dd" />
+									</h:outputText>
+								</p:column>
+
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.payment_value}" />
+									</f:facet>
+									<h:outputText value="#{payment.value}">
+										<f:convertNumber type="currency" currencySymbol="$"
+											maxFractionDigits="2" />
+									</h:outputText>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.payment_method}" />
+									</f:facet>
+									<h:outputText value="#{payment.method}" />
+								</p:column>
+								<!-- 
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{msg.actions}" />
+									</f:facet>
+									
+									<p:commandLink update="tblPayments"
+										title="#{msg.button_delete}"
+										action="#{loanBean.deletePayment}">
+										<h:outputText styleClass="pi pi-search" style="margin:0 auto;"
+											value="#{msg.button_delete}" />
+										<f:setPropertyActionListener value="#{payment}"
+											target="#{loanBean.payment}" />
+										<p:confirm header="#{msg.confirmation_title}"
+											message="#{msg.confirmation_yes_no}"
+											icon="pi pi-exclamation-triangle" />
+									</p:commandLink>
+								</p:column>
+								 -->
+							</p:dataTable>
+							<p:blockUI block="tblPayments" trigger="tblPayments">
+        					LOADING<br />
+								<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+							</p:blockUI>
+
+						</div>
+					</h:form>
+				</p:outputPanel>
+
+				<p:commandButton value="#{msg.button_back}" icon="pi pi-home"
+					action="#{loanBean.back()}" />
+
+				<p:dialog header="#{msg.payment_detail}" id="paymentDialog"
+					widgetVar="paymentDialog" modal="true" showEffect="fade"
+					hideEffect="fade" resizable="true" draggable="false" width="30%"
+					height="350px" visible="#{facesContext.validationFailed}">
+
+					<h:form id="formPanelPayment" styleClass="formPanel">
+						<div class="ui-fluid p-formgrid p-grid">
+							<div class="p-field p-col-12 p-md-12">
+								<p:outputLabel for="payment_value" value="#{msg.payment_value}" />
+								<!-- 
+								<p:inputText id="payment_value"
+									value="#{loanBean.payment.value}" required="true">
+									<f:validateLength minimum="2" maximum="20" />
+								</p:inputText>
+								 -->
+								<p:inputNumber id="payment_value"
+									value="#{loanBean.payment.value}" required="true" symbol="$"
+									symbolPosition="p" emptyValue="always">
+									<p:ajax update="payment_value" />
+								</p:inputNumber>
+								<p:message for="payment_value" display="tooltip" />
+							</div>
+							<div class="p-field p-col-12 p-md-12">
+								<p:outputLabel for="payment_date" value="#{msg.payment_date}" />
+								<input type="hidden" autofocus="autofocus" />
+								<p:datePicker id="payment_date" value="#{loanBean.payment.date}"
+									mindate="#{loanBean.loan.lastPaymentDate}"
+									maxdate="#{loanBean.today}" showIcon="true" required="true">
+								</p:datePicker>
+
+								<p:message for="payment_date" display="tooltip" />
+							</div>
+							<div class="p-field p-col-12 p-md-12">
+								<p:outputLabel for="payment_method"
+									value="#{msg.payment_method}" />
+								<!--  
+								<p:inputText id="payment_method"
+									value="#{loanBean.payment.method}" required="true">
+									<f:validateLength minimum="2" maximum="10" />
+								</p:inputText>
+								-->
+								<p:selectOneMenu id="payment_method" required="true"
+									value="#{loanBean.payment.method}">
+									<f:selectItem itemLabel="#{msg.list_select}"
+										noSelectionOption="true" />
+									<f:selectItems value="#{loanBean.paymentMethods}" />
+								</p:selectOneMenu>
+								<p:message for="payment_method" display="tooltip" />
+							</div>
+							<div class="p-field p-col-12 p-md-12">
+								<p:outputLabel for="internal_reference"
+									value="#{msg.internal_reference}" />
+								<p:inputText id="internal_reference"
+									value="#{loanBean.payment.internalReference}" required="true">
+									<f:validateLength minimum="2" maximum="20" />
+								</p:inputText>
+								<p:message for="internal_reference" display="tooltip" />
+							</div>
+						</div>
+						<p:commandButton id="btnSavePayment" value="#{msg.button_save}"
+							type="submit" icon="pi pi-home"
+							oncomplete="if(#{loanBean.paymentFormOk}){PF('paymentDialog').hide();}"
+							update=":growl formPanelPaymentsDetail paymentDialog formPanelLoanDetail"
+							action="#{loanBean.savePayment()}">
+							<p:confirm header="#{msg.confirmation_title}"
+								message="#{msg.confirmation_yes_no}"
+								icon="pi pi-exclamation-triangle" />
+						</p:commandButton>
+					</h:form>
+				</p:dialog>
+
+
+
+			</div>
+		</div>
+
+
+		<!-- Find customer -->
+		<p:dialog header="#{msg.customer_subtitle}" id="findGuarantorDialog"
+			widgetVar="findGuarantorDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" draggable="false" width="70%">
+
+
+			<h:form id="formPanel" styleClass="formPanel">
+				<div class="ui-fluid p-formgrid p-grid">
+					<div class="p-field p-col-12 p-md-8">
+						<p:outputLabel for="searchCustomerId" value="#{msg.customer_id}" />
+						<p:inputText id="searchCustomerId"
+							value="#{loanBean.customerSearch.customerId}"
+							onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;"
+							required="true" label="#{msg.customer_id}">
+							<f:validateLength minimum="3" maximum="15" />
+						</p:inputText>
+						<p:message for="searchCustomerId" display="tooltip" />
+					</div>
+					<div class="p-field p-col-12 p-md-4">
+						<p:outputLabel for="search" />
+						<p:commandButton id="search" value="#{msg.button_search}"
+							update=":growl formPanel tbl" action="#{loanBean.findCustomer}" />
+					</div>
+				</div>
+			</h:form>
+
+
+
+
+
+			<p:dataTable id="tbl" var="c" value="#{loanBean.customers}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+				paginator="true" rows="10" style="margin-bottom:20px">
+
+				<p:column visible="false">
+					<f:facet name="header">
+						<h:outputText value="Id" />
+					</f:facet>
+					<h:outputText value="#{c.id}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{msg.customer_id}" />
+					</f:facet>
+					<h:outputText value="#{c.customerId}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{msg.lastName}" />
+					</f:facet>
+					<h:outputText value="#{c.lastName}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{msg.name}" />
+					</f:facet>
+					<h:outputText value="#{c.name}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{msg.phone}" />
+					</f:facet>
+					<h:outputText value="#{c.phone}" />
+				</p:column>
+				<!--  -->
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{msg.actions}" />
+					</f:facet>
+
+					<p:commandLink update=":formPanelLoanDetail"
+						oncomplete="PF('findGuarantorDialog').hide()"
+						title="#{msg.button_select}">
+						<h:outputText styleClass="pi pi-search" style="margin:0 auto;"
+							value="#{msg.button_select}" />
+						<f:setPropertyActionListener value="#{c}"
+							target="#{loanBean.loan.guarantor}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<p:blockUI block="tbl" trigger="tbl">
+        					LOADING<br />
+				<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+			</p:blockUI>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

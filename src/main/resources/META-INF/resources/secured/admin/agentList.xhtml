@@ -1,0 +1,96 @@
+<ui:composition template="/secured/template/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:define name="title">
+        #{msg.agent_title}
+    </ui:define>
+
+	<ui:define name="content">
+		<div class="card">
+			<div class="subtitle_page">
+				<h3>#{msg.agent_subtitle_list}</h3>
+			</div>
+			<div class="card-content">
+
+
+				<h:form id="form">
+					<p:dataTable id="tbl" var="agent"
+						value="#{agentBean.agents}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+						paginator="true" rows="20" style="margin-bottom:20px">
+
+						<p:column visible="false">
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{agent.id}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.agent_id}" />
+							</f:facet>
+							<h:outputText value="#{agent.agentId}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.lastName}" />
+							</f:facet>
+							<h:outputText value="#{agent.lastName}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.name}" />
+							</f:facet>
+							<h:outputText value="#{agent.name}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.phone}" />
+							</f:facet>
+							<h:outputText value="#{agent.phone}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.email}" />
+							</f:facet>
+							<h:outputText value="#{agent.email}" />
+						</p:column>
+
+
+
+
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.actions}" />
+							</f:facet>
+							<p:commandButton value="#{msg.button_detail}" icon="pi pi-home"
+								action="#{agentBean.update()}">
+								<f:setPropertyActionListener value="#{agent}"
+									target="#{agentBean.agent}" />
+							</p:commandButton>
+							<p:commandButton value="#{msg.button_delete}" icon="pi pi-home"
+								action="#{agentBean.delete()}" update=":growl tbl">
+								<f:setPropertyActionListener value="#{agent}"
+									target="#{agentBean.agent}" />
+								<p:confirm header="#{msg.confirmation_title}"
+									message="#{msg.confirmation_yes_no}"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</h:form>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:th="http://www.thymeleaf.org">
+<h:head>
+	<title>Chipre system - <ui:insert name="title"></ui:insert></title>
+	<link rel="stylesheet" href="/static/css/main.css" />
+	<!-- 		th:href="@{/css/main.css}" /> -->
+	<link rel="stylesheet" href="/static/css/general.css" />
+	<!-- 		th:href="@{/css/general.css}" /> -->
+	<link rel="stylesheet" href="/static/css/prime.css" />
+	<!-- 		th:href="@{/css/prie.css}" /> -->
+	<ui:insert name="css" />
+	<script type="text/javascript"
+		src="/javax.faces.resource/datepicker/datepicker.js.jsf?ln=primefaces&amp;v=7.0" />
+
+	<script>
+		var lastActiveTime = new Date().getTime();
+		$(document).ready(
+				function() {
+					$('body').bind('click mousemove keypress scroll resize',
+							function() {
+								lastActiveTime = new Date().getTime();
+							});
+					setInterval(checkIdleTime, 30000); // 30 sec
+				});
+
+		function checkIdleTime() {
+			var diff = new Date().getTime() - lastActiveTime;
+			if (diff > 1200000) {//2 min of inactivity
+// 				window.location.href = "/logout?msg=onTimeOut"
+				window.location.href = "/login.xhtml?msg=onTimeOut"
+			} else {
+// 				$.ajax({
+// 					url : '/refreshSession',
+// 					error : function(data, status, xhr) {
+// 						alert("cannot refresh session on server: " + xhr);
+// 						window.location.reload();
+// 					}
+// 				});
+			}
+		}
+	</script>
+
+</h:head>
+<h:body>
+	<!--div id="header">Header</div>
+        <div id="menu"><ui:insert name="menubar">
+			<ui:include src="menubar.xhtml" />
+		</ui:insert></div>
+        <div id="content"><ui:insert name="content">Bienvenido al sistem Chipre</ui:insert></div>
+        <div id="footer">Footer</div-->
+	<div class="layout-wrapper layout-menu-static">
+
+		<div id="header" class="topbar">
+			<div class="ui-fluid p-formgrid p-grid">
+				<div class="p-field p-col-12 p-md-10" align="left">
+					<H2>#{msg.system_name}</H2>
+
+				</div>
+				<div class="p-field p-col-12 p-md-2" align="right">
+					<H1>
+						<p:outputLabel value="#{loginBean.userSession.userLogged.name}" />
+					</H1>
+					<p:commandLink action="#{loginBean.loginPage()}"
+						title="#{msg.logout}">
+						<h:outputText styleClass="pi pi-search" style="margin:0 auto;"
+							value="#{msg.logout}" />
+
+					</p:commandLink>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="content">
+			<p:growl id="growl" showSummary="true" showDetail="false" life="5000" />
+			<div class="layout-menu-wrapper layout-menu-dark">
+				<div class="nano">
+					<div class="nano-content sidebar-scroll-content">
+						<div id="menu" class="layout-menu-container">
+							<h:form>
+								<!-- p:growl>
+									<p:autoUpdate />
+								</p:growl-->
+
+								<p:menu toggleable="true" style="width: 95%;">
+									<p:submenu label="#{msg.agent_title}">
+										<p:menuitem value="#{msg.agent_add_user}"
+											action="#{menuBean.agent}" icon="pi pi-save" />
+										<p:menuitem value="#{msg.agent_list}"
+											action="#{menuBean.agentList}" icon="pi pi-save" />
+									</p:submenu>
+									<p:submenu label="#{msg.customer_title}">
+										<p:menuitem value="#{msg.customer_add_user}"
+											action="#{menuBean.customer}" icon="pi pi-save" />
+										<p:menuitem value="#{msg.customer_list}"
+											action="#{menuBean.customerList}" icon="pi pi-save" />
+									</p:submenu>
+									<p:submenu label="#{msg.bussines}">
+										<p:menuitem value="#{msg.comission_title}"
+											action="#{menuBean.comissionList}" icon="pi pi-times" />
+										<p:menuitem value="#{msg.loan_title}"
+											action="#{menuBean.loan}" icon="pi pi-times" />
+									</p:submenu>
+									<p:submenu label="#{msg.report_title}">
+										<p:menuitem value="#{msg.report_subtitle1}"
+											action="#{menuBean.report1}" icon="pi pi-times" />
+										<p:menuitem value="#{msg.report_subtitle2}"
+											action="#{menuBean.report2}" icon="pi pi-times" />
+										<p:menuitem value="#{msg.report_subtitle3}"
+											action="#{menuBean.report3}" icon="pi pi-times" />
+									</p:submenu>
+									<p:submenu label="#{msg.settings}">
+										<p:menuitem value="#{msg.parameter_title}"
+											action="#{menuBean.parameters}" icon="pi pi-times" />
+										<p:submenu label="#{msg.user_title}">
+											<p:menuitem value="#{msg.user_add_user}"
+												action="#{menuBean.user}" icon="pi pi-save" />
+											<p:menuitem value="#{msg.user_list}"
+												action="#{menuBean.userList}" icon="pi pi-save" />
+										</p:submenu>
+									</p:submenu>
+								</p:menu>
+
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+			<div id="content" class="layout-content">
+				<div class="title_page">
+					<h2>
+						<ui:insert name="title"></ui:insert>
+					</h2>
+				</div>
+
+				<!-- div class="subtitle_page">
+						<h3>
+							<ui:insert name="subtitle"></ui:insert>
+						</h3>
+					</div-->
+				<div class="ui-g card-content">
+					<ui:insert name="content"></ui:insert>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="#{msg.yes}" type="button"
+							styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="#{msg.no}" type="button"
+							styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+				</div>
+			</div>
+			<div id="footer" class="layout-footer clearfix">FOOTER</div>
+		</div>
+	</div>
+</h:body>
+</html>

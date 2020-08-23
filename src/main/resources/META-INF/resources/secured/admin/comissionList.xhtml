@@ -1,0 +1,232 @@
+<ui:composition template="/secured/template/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<ui:define name="title">
+        #{msg.comission_title}
+    </ui:define>
+
+	<ui:define name="content">
+		<div class="card">
+			<div class="subtitle_page">
+				<h3>#{msg.comission_subtitle_list}</h3>
+			</div>
+			<div class="card-content">
+
+
+
+
+
+
+				<h:form id="formPanel" styleClass="formPanel">
+					<div class="ui-fluid p-formgrid p-grid">
+						<div class="p-field p-col-12 p-md-8">
+							<p:outputLabel for="agent" value="#{msg.agent}" />
+							<p:selectOneMenu id="agent" required="true"
+								value="#{comissionBean.agent.id}">
+								<f:selectItem itemLabel="#{msg.list_select}"
+									noSelectionOption="true" />
+								<f:selectItems value="#{comissionBean.agentsItems}" />
+							</p:selectOneMenu>
+							<p:message for="agent" display="tooltip" />
+						</div>
+						<div class="p-field p-col-12 p-md-4">
+							<p:outputLabel for="search" />
+							<p:commandButton id="search" value="#{msg.button_search}"
+								update=":growl formPanel form"
+								action="#{comissionBean.findComissions}" />
+						</div>
+					</div>
+				</h:form>
+
+
+
+
+
+				<h:form id="form">
+
+
+
+
+					<p:toolbar>
+						<f:facet name="left">
+							<p:commandButton id="btn1" value="#{msg.button_pay}"
+								icon="pi pi-home" update=":growl form"
+								action="#{comissionBean.payComission()}">
+								<p:confirm header="#{msg.confirmation_title}"
+									message="#{msg.confirmation_yes_no}"
+									icon="pi pi-exclamation-triangle" />
+							</p:commandButton>
+
+						</f:facet>
+
+						<f:facet name="right">
+							<div class="p-formgrid p-grid" id="generalSummary">
+								<div class="p-field">
+									<p:outputLabel for="balance" value="#{msg.comission_to_pay}" />
+									<p:inputText id="balance"
+										value="#{comissionBean.totalComissionToPay}" disabled="true">
+										<f:convertNumber type="currency" currencySymbol="$"
+											maxFractionDigits="2" />
+									</p:inputText>
+									<p:message for="balance" display="tooltip" />
+								</div>
+							</div>
+						</f:facet>
+					</p:toolbar>
+
+
+
+
+
+					<p:dataTable id="tbl" var="payment" widgetVar="comissionTable"
+						value="#{comissionBean.payments}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+						paginator="true" rows="20" style="margin-bottom:20px"
+						rowKey="#{payment.id}"
+						selection="#{comissionBean.selectedPayments}"
+						disabledSelection="#{payment.isComissionPaid}">
+
+
+						<p:ajax event="rowSelectCheckbox"
+							listener="#{comissionBean.calculateComission()}"
+							update=":growl form" />
+						<p:ajax event="rowUnselectCheckbox"
+							listener="#{comissionBean.calculateComission()}"
+							update=":growl form" />
+						<p:ajax event="toggleSelect"
+							listener="#{comissionBean.calculateComission()}"
+							update=":growl form" />
+						<p:ajax event="rowSelect"
+							listener="#{comissionBean.calculateComission()}"
+							update=":growl form" />
+						<p:ajax event="rowUnselect"
+							listener="#{comissionBean.calculateComission()}"
+							update=":growl form" />
+
+
+						<p:column selectionMode="multiple"
+							style="width:16px;text-align:center" />
+						<p:column visible="false">
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{payment.id}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.name}" />
+							</f:facet>
+							<h:outputText
+								value="#{payment.loan.customer.name} #{payment.loan.customer.lastName}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.concept}" />
+							</f:facet>
+							<h:outputText value="#{payment.loan.concept}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.payment_date}" />
+							</f:facet>
+							<h:outputText value="#{payment.date}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.payment_method}" />
+							</f:facet>
+							<h:outputText value="#{payment.method}">
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.comission_payment}" />
+							</f:facet>
+							<h:outputText value="#{payment.value}">
+								<f:convertNumber type="currency" currencySymbol="$"
+									maxFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.comission_capital}" />
+							</f:facet>
+							<h:outputText value="#{payment.valueToCapital}">
+								<f:convertNumber type="currency" currencySymbol="$"
+									maxFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.comission_interest}" />
+							</f:facet>
+							<h:outputText value="#{payment.valueToInterestTotal}">
+								<f:convertNumber type="currency" currencySymbol="$"
+									maxFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.comission_value}" />
+							</f:facet>
+							<h:outputText value="#{payment.valueToComission}">
+								<f:convertNumber type="currency" currencySymbol="$"
+									maxFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.comission_date}" />
+							</f:facet>
+							<h:outputText value="#{payment.dateComissionPaid}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column filterBy="#{payment.isComissionPaid}"
+							style="text-align:center" headerText="#{msg.comission_is_paid}">
+							<f:facet name="filter">
+								<p:selectOneButton onchange="PF('comissionTable').filter()"
+									styleClass="custom-filter">
+									<f:converter converterId="javax.faces.Boolean" />
+									<f:selectItem itemLabel="#{msg.all}" itemValue="" />
+									<f:selectItem itemLabel="#{msg.yes}" itemValue="true" />
+									<f:selectItem itemLabel="#{msg.no}" itemValue="false" />
+								</p:selectOneButton>
+							</f:facet>
+							<!-- 
+							<p:selectBooleanCheckbox value="#{payment.isComissionPaid}"
+								disabled="true">
+							</p:selectBooleanCheckbox>
+							 -->
+							<h:outputText
+								value="#{payment.isComissionPaid? msg.yes : msg.no}" />
+						</p:column>
+
+						<!-- 
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{msg.actions}" />
+							</f:facet>
+						</p:column>
+						
+						 -->
+
+					</p:dataTable>
+					<p:blockUI block="tbl" trigger="tbl">
+        					LOADING<br />
+						<p:graphicImage name="/static/images/ajaxloadingbar.gif" />
+					</p:blockUI>
+				</h:form>
+
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

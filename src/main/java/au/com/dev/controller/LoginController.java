@@ -37,6 +37,12 @@ public class LoginController implements WebMvcConfigurer {
 		return "form";
 	}
 	
+//	@RequestMapping(value = "/quote", method = RequestMethod.GET) 
+//	public String showQuote(@ModelAttribute("quoteForm") User user, BindingResult result, Model model) {
+//		model.addAttribute("user",  new User());
+//		return "quote";
+//	}
+	
 
 	@PostMapping("/")
 	public String checkPersonInfo(@Valid User user, BindingResult bindingResult, Model model) {
@@ -46,7 +52,8 @@ public class LoginController implements WebMvcConfigurer {
 				user.getPassword() != null && !user.getPassword().trim().isEmpty()){
 			User u = userRepository.validateLogin(user.getUsername(), user.getPassword());
 			if (u != null){
-				page =  "redirect:/web/subjects?auth=12345";
+//				page =  "redirect:/web/subjects?auth=12345";
+				page =  "redirect:/web/listquotes";
 			}else{
 				error = "Username/Password incorrect";
 			}
@@ -56,7 +63,8 @@ public class LoginController implements WebMvcConfigurer {
 		if (bindingResult.hasErrors()) {
 			
 		}
-		page =  "redirect:/web/subjects?auth=12345";
+//		page =  "redirect:/web/subjects?auth=12345";
+//		page =  "redirect:/web/listquotes";
 		
 		model.addAttribute("error",  error);
 		return page;
